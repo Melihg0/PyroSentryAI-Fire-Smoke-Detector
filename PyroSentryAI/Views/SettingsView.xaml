@@ -185,72 +185,79 @@
         </ScrollViewer>
         <Grid Grid.Column="1" Margin="20,40,40,40">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Text="Mevcut Kameralar" FontSize="24" FontWeight="Bold" 
-                           Foreground="{StaticResource PrimaryTextBrush}" Margin="0,0,0,25"/>
+                <TextBlock DockPanel.Dock="Top"
+                   Text="Mevcut Kameralar"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Foreground="{StaticResource PrimaryTextBrush}"
+                   Margin="0,0,0,25" />
 
                 <DataGrid ItemsSource="{Binding Cameras}"
-                          AutoGenerateColumns="False"
-                          Background="Transparent"
-                          BorderThickness="0"
-                          CanUserAddRows="False"
-                          HeadersVisibility="Column"
-                          GridLinesVisibility="None"
-                          RowBackground="Transparent"
-                          Foreground="{StaticResource PrimaryTextBrush}">
+                  AutoGenerateColumns="False"
+                  Background="Transparent"
+                  BorderThickness="0"
+                  CanUserAddRows="False"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="None"
+                  RowBackground="Transparent"
+                  Foreground="{StaticResource PrimaryTextBrush}">
 
                     <DataGrid.Resources>
-                        <!-- Başlıkların stili -->
                         <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
-                            <Setter Property="FontSize" Value="14"/>
-                            <Setter Property="BorderThickness" Value="0,0,0,2"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource SecondaryTextBrush}"/>
-                            <Setter Property="Padding" Value="5"/>
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}" />
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="BorderThickness" Value="0,0,0,2" />
+                            <Setter Property="BorderBrush" Value="{StaticResource SecondaryTextBrush}" />
+                            <Setter Property="Padding" Value="15,5,5,5" />
+                        </Style>
+
+                        <Style x:Key="StatusTextBlockStyle" TargetType="TextBlock">
+                            <Setter Property="Text" Value="Aktif" />
+                            <Setter Property="Foreground" Value="#2ECC71" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="Padding" Value="0,0,80,15" />
+                            <Setter Property="Margin" Value="5,0,0,0"  />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                    <Setter Property="Text" Value="Devre Dışı" />
+                                    <Setter Property="Foreground" Value="#E74C3C" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+
+                        <Style x:Key="ActionButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+                            <Setter Property="Width" Value="85" />
+                            <Setter Property="FontSize" Value="10" />
+                            <Setter Property="Content" Value="Devre Dışı Bırak" />
+                            <Setter Property="Margin" Value="5" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                    <Setter Property="Content" Value="Aktif Et" />
+                                </DataTrigger>
+                            </Style.Triggers>
                         </Style>
                     </DataGrid.Resources>
-
                     <DataGrid.Columns>
-                        <!-- Kamera Adı Sütunu -->
-                        <DataGridTextColumn Header="Kamera Adı" Binding="{Binding CameraName}" Width="*" FontSize="16"/>
+                        <DataGridTextColumn Header="Kamera Adı" Binding="{Binding CameraName}" Width="*" FontSize="16"  />
 
-                        <!-- Durum Sütunu (Aktif/Pasif) -->
                         <DataGridTemplateColumn Header="Durum" Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
-                                        <!-- Yeşil -->
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value="Aktif"/>
-                                                <Setter Property="Foreground" Value="#2ECC71"/>
-                                                <!-- Kırmızı -->
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                        <Setter Property="Text" Value="Pasif"/>
-                                                        <Setter Property="Foreground" Value="#E74C3C"/>
-
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
+                                    <TextBlock Style="{StaticResource StatusTextBlockStyle}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <!-- İşlemler Sütunu (Butonlar) -->
                         <DataGridTemplateColumn Header="İşlemler" Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <!-- Silme buttonu -->
-                                        <Button Content="Sil" Margin="5" Width="50"
-                                                Command="{Binding DataContext.DeleteCameraCommand, 
-                                                RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                CommandParameter="{Binding}"/>
-                                        <!--Ata sınıfın datacontext'ini kullanarak DeleteCameraCommand'a bindingle bağlıyoruz.-->
-                                    </StackPanel>
+                                    <Button Style="{StaticResource ActionButtonStyle}"
+                                    Command="{Binding DataContext.ToggleCameraStatusCommand, 
+                                        RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
