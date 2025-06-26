@@ -1,0 +1,87 @@
+﻿<Window x:Class="PyroSentryAI.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PyroSentryAI"
+        xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+        xmlns:vm="clr-namespace:PyroSentryAI.ViewModels"
+        mc:Ignorable="d"
+        
+        Title="PyroSentryAI" Height="720" Width="1280"
+        WindowState="Maximized">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="210"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="0"
+                Background="#FF3F3F41" Padding="0,20,0,20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="0,120,0,0">
+
+                    <Button Content="ANA SAYFA" 
+                        Command="{Binding NavigateToHomeCommand}"
+                        Height="50" Background="Transparent"
+                        BorderThickness="0" Foreground="#FFF1F1F1" 
+                        FontSize="18" Margin="0,5" />
+
+                    <Button Content="Kayıtlar" 
+                        Command="{Binding NavigateToLogsCommand}"
+                        Height="50" Background="Transparent"
+                        BorderThickness="0" Foreground="#FFF1F1F1"
+                        FontSize="18" Margin="0,7"/>
+                </StackPanel>
+                <Button Content="Ayarlar"  Grid.Row="2"
+                        Height="50" Background="Transparent" 
+                        Command="{Binding NavigateToSettingsCommand}"
+                        BorderThickness="0" Foreground="#FFF1F1F1" 
+                        FontSize="18" Margin="0,7" />
+                
+                <!--Kamera Kısmı-->
+            </Grid>
+        </Border>
+        <ToggleButton Grid.Column="1"
+                  IsChecked="{Binding IsMenuOpen}"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top" Width="30"
+                  Margin="20,25,0,0" Height="30"/>
+        <ItemsControl Grid.Column="1" 
+              Margin="10" ItemsSource="{Binding Cameras}"
+              Background="LightSlateGray" >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="2" Columns="2"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="#FFF37C43" BorderThickness="1" Margin="5" Background="Black" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" 
+                           Text="{Binding CameraName}"
+                           Foreground="#FFF1F1F1" 
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center" 
+                           Margin="5"/>
+                           <Viewbox Grid.Row="1" Stretch="Uniform">
+                                <vlc:VideoView MediaPlayer="{Binding MediaPlayer}" Width="1280" Height="720" />
+                           </Viewbox>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+        </ItemsControl>
+    </Grid>
+</Window>
