@@ -22,9 +22,37 @@ namespace PyroSentryAI.Views
         {
             InitializeComponent();
 
-            // İŞTE KONTROL ETMEN GEREKEN EN KRİTİK SATIR BU:
             // Bu satır, "Bu pencerenin beyni, MainViewModel sınıfının yeni bir örneğidir" der.
             this.DataContext = new MainViewModel();
+        }
+
+        private void titleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {   //Oluşturdugmuz pencerenin başlık çubuğuna tıklandığında pencerenin taşınmasını sağlar.
+            this.DragMove();
+            
+        }
+
+        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            // Bu pencereyi Simge Durumuna küçült.
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void btnMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

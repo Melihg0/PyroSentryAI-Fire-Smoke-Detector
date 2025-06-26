@@ -9,8 +9,11 @@
         mc:Ignorable="d"
         
         Title="PyroSentryAI" Height="720" Width="1280"
-        WindowState="Maximized">
-    <Grid>
+        WindowState="Maximized" WindowStyle="None" 
+        AllowsTransparency="True" Background="Transparent">
+    <!--Yeni Cerceve Borderı-->
+    <Border Background="{StaticResource PrimaryBackgroundBrush}" CornerRadius="10">
+        <Grid x:Name="titleBar" Grid.Column="1" MouseLeftButtonDown="titleBar_MouseLeftButtonDown">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
@@ -18,10 +21,9 @@
 
         <Border x:Name="solBorderMenu"
                 Grid.Column="0"
-                Width="175"
                 Background="{StaticResource SecondaryBackgroundBrush}" 
                 Padding="0,20,0,20">
-
+                <!--Menu buttonların ve iconların style'ları bu kısımda tanımlandı.-->
             <Border.Resources>
                 <Style TargetType="Button" x:Key="MenuButtonStyle">
                     <Setter Property="Height" Value="50"/>
@@ -42,6 +44,18 @@
                     <Setter Property="Margin" Value="10,0,15,0"/>
                 </Style>
             </Border.Resources>
+            <!--BorderStyle Kısmı ToggleButtonu açılır kapanır yapan kısım-->
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Width" Value="175"/>
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=menuToggleButton, Path=IsChecked}" Value="False">
+                            <Setter Property="Width" Value="60"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -49,7 +63,7 @@
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-
+                    <!--Sol Menu Kısmı-->
                 <StackPanel Grid.Row="1" VerticalAlignment="Top" Margin="0,120,0,0">
                     <Button Command="{Binding NavigateToHomeCommand}" Style="{StaticResource MenuButtonStyle}">
                         <StackPanel Orientation="Horizontal">
@@ -73,22 +87,41 @@
                 </Button>
             </Grid>
         </Border>
-
+        <!--Sag Menu Kısmı-->
         <Grid Grid.Column="1" Background="{StaticResource PrimaryBackgroundBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
-            <ToggleButton Grid.Row="0"
+            <!--ToggleButton Kısmı-->
+            <ToggleButton x:Name="menuToggleButton" Grid.Row="0"
                           IsChecked="{Binding IsMenuOpen}"
                           HorizontalAlignment="Left" VerticalAlignment="Top"
                           Width="40" Height="40" Margin="20,25,0,0"
                           Background="Transparent" BorderThickness="0" Foreground="White">
-                <Path Width="20" Height="20" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                         <Path Width="20" Height="20" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
                       Data="{StaticResource menuToggle}"/>
             </ToggleButton>
-
+                <!--Başlık Simge Kısmı-->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="btnMinimize" Style="{StaticResource WindowButtonStyle}" Click="btnMinimize_Click">
+                        <Viewbox Width="14" Height="14">
+                            <Path Data="{StaticResource windowMinimize}" Fill="{StaticResource SecondaryTextBrush}" />
+                        </Viewbox>
+                    </Button>
+                    <Button x:Name="btnMaximize" Style="{StaticResource WindowButtonStyle}" Click="btnMaximize_Click">
+                        <Viewbox Width="14" Height="14">
+                        <Path Data="{StaticResource windowMaximize}" Fill="{StaticResource SecondaryTextBrush}" />
+                        </Viewbox>
+                    </Button>
+                    
+                    <Button x:Name="btnClose" Style="{StaticResource WindowButtonStyle}" Click="btnClose_Click">
+                        <Viewbox Width="16" Height="16" Margin="0,0,8,3">
+                        <Path Data="{StaticResource windowClose}" Fill="{StaticResource SecondaryTextBrush}" />
+                        </Viewbox>
+                    </Button>
+                </StackPanel>
+                <!--Kamera Görüntüleme Kısmı-->
             <ItemsControl Grid.Row="1" Margin="10" ItemsSource="{Binding Cameras}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -106,9 +139,8 @@
                                 <TextBlock Grid.Row="0" Text="{Binding CameraName}"
                                            Foreground="#FFEAEAEB" FontWeight="Bold"
                                            HorizontalAlignment="Center" Margin="5"/>
-                                <Viewbox Grid.Row="1" Stretch="Uniform">
-                                    <vlc:VideoView MediaPlayer="{Binding MediaPlayer}" />
-                                </Viewbox>
+                                <vlc:VideoView Grid.Row="1" MediaPlayer="{Binding MediaPlayer}" />
+                                
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -116,4 +148,5 @@
             </ItemsControl>
         </Grid>
     </Grid>
+    </Border>
 </Window>

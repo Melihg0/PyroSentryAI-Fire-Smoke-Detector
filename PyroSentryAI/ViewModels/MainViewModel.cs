@@ -19,8 +19,10 @@ namespace PyroSentryAI.ViewModels
             Cameras.Add(new CameraViewModel("Kamera 2", "DarkGoldenrod"));
             Cameras.Add(new CameraViewModel("Kamera 3", "IndianRed"));
             Cameras.Add(new CameraViewModel("Kamera 4", "LightGreen"));
+            Cameras.Add(new CameraViewModel("Kamera 3", "IndianRed"));
             Cameras.Add(new CameraViewModel("Kamera 4", "LightGreen"));
-            Cameras.Add(new CameraViewModel("Kamera 4", "LightGreen"));
+
+
 
         }
     }

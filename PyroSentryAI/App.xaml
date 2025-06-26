@@ -9,13 +9,35 @@
                 <ResourceDictionary Source="/Assets/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#1E1E24"/>
-                    <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="#2D2D35"/>
-                    <SolidColorBrush x:Key="PrimaryTextBrush" Color="#EAEAEB"/>
-                    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#A9A9B2"/>
-                    <SolidColorBrush x:Key="AccentBrush" Color="#FF8C00"/>
-              
+            <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="#2D2D35"/>
+            <SolidColorBrush x:Key="PrimaryTextBrush" Color="#EAEAEB"/>
+            <SolidColorBrush x:Key="SecondaryTextBrush" Color="#A9A9B2"/>
+            <SolidColorBrush x:Key="AccentBrush" Color="#FF8C00"/>
+
+
+            <Style TargetType="Button" x:Key="WindowButtonStyle">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Width" Value="40"/>
+                <Setter Property="Height" Value="30"/>
+                <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#3FFFFFFE"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
-        
     </Application.Resources>
+    
 </Application>
     
