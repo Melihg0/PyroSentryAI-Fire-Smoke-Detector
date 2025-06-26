@@ -1,48 +1,52 @@
-﻿using PyroSentryAI.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PyroSentryAI.Models;
 using PyroSentryAI.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using System.Windows.Media.Media3D;
 namespace PyroSentryAI.Services.Implementations
 {
     public class DatabaseService : IDatabaseService
     {
-        private readonly PyroSentryAiDbContext _context;
+        private readonly IDbContextFactory<PyroSentryAiDbContext> _contextFactory;
 
 
-        public DatabaseService(PyroSentryAiDbContext context)
+        public DatabaseService(IDbContextFactory<PyroSentryAiDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory= contextFactory;
         }
 
         public async Task<TblSetting> GetSettingsAsync()
         {
-            return await _context.TblSettings.FirstOrDefaultAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.TblSettings.FirstOrDefaultAsync();
         }
 
 
         public async Task UpdateSettingsAsync(TblSetting settings)
         {
-            _context.Entry(settings).State = EntityState.Modified; //zorla guncelle
-            await _context.SaveChangesAsync();           
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            context.TblSettings.Update(settings);
+            await context.SaveChangesAsync();
         }
-        }
+
 
 
         public async Task<List<TblCamera>> GetAllVisibleCamerasAsync()
         {
             //arşiv özelliği geldiğinde  (c => c.IsArchived == false) şartı eklenecek.
-
-            return await _context.TblCameras.OrderByDescending(c => c.CameraId).ToListAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.TblCameras.OrderByDescending(c => c.CameraId).ToListAsync();
         }
 
-        public  async Task<List<TblCamera>> GetActiveCamerasAsync()
+        public async Task<List<TblCamera>> GetActiveCamerasAsync()
         {
             // (c => c.IsArchived == false) şartı da gelicek.
-            return await _context.TblCameras
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.TblCameras
                                  .Where(c => c.IsActive == true)
                                  .OrderByDescending(c => c.CameraId)
                                  .ToListAsync();
@@ -51,18 +55,19 @@ namespace PyroSentryAI.Services.Implementations
 
         public async Task<TblCamera> AddCameraAsync(TblCamera newCamera)
         {
-            _context.TblCameras.Add(newCamera);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            context.TblCameras.Add(newCamera);
+            await context.SaveChangesAsync();
             return newCamera;
         }
 
 
         public async Task UpdateCameraAsync(TblCamera cameraToUpdate)
         {
-            _context.TblCameras.Update(cameraToUpdate);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            context.TblCameras.Update(cameraToUpdate);
+            await context.SaveChangesAsync();
         }
-
-       
+        
     }
 }

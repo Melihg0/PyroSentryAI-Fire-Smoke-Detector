@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using PyroSentryAI.Models;
+using PyroSentryAI.Services.Implementations;
 using PyroSentryAI.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,19 +13,17 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media.Media3D;
+using PyroSentryAI.Messages;
 
 
 namespace PyroSentryAI.ViewModels
 {
     public partial class SettingsViewModel : ObservableObject
     {
-        public record CameraAddedMessage(TblCamera NewCamera);
-        public record CameraStatusChangedMessage(TblCamera UpdatedCamera);
 
         private readonly IDatabaseService _dbService;
         private readonly IMessenger _messenger;
-
+        private readonly ICameraViewModelFactory _cameraFactory;
         //Ayarlar için proplar.
         [ObservableProperty]
         private string _confidenceThreshold; //String tanımladık dikkat.
@@ -58,19 +57,20 @@ namespace PyroSentryAI.ViewModels
         private bool hasCameraError;
 
         //Kameralar listesi
-        public ObservableCollection<TblCamera> Cameras { get;} = new();
+        public ObservableCollection<CameraViewModel> Cameras { get;} = new();
 
         
-        public SettingsViewModel(IDatabaseService dbService, IMessenger messenger)
+        public SettingsViewModel(IDatabaseService dbService, IMessenger messenger, ICameraViewModelFactory cameraFactory)
         {
             _dbService = dbService;
-            _messenger = messenger; 
+            _messenger = messenger;
+            _cameraFactory = cameraFactory;
 
             // ViewModel oluşturulduğunda mevcut verileri yükle
-            LoadInitialDataAsync();
+           
         }
 
-        private async void LoadInitialDataAsync()
+        public async Task LoadInitialDataAsync()
         {
             try
             {
@@ -87,13 +87,12 @@ namespace PyroSentryAI.ViewModels
                 Cameras.Clear();
                 foreach (var cam in camerasFromDb)
                 {
-                    Cameras.Add(cam);
+                    Cameras.Add(_cameraFactory.Create(cam,initializePlayer: false));
                 }
             }
             catch (System.Exception ex)
             {
                 MessageBox.Show($"Uygulama verileri yüklenemedi: {ex.Message}", "Kritik Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                //degisecek
             }
         }
         [RelayCommand]
@@ -162,6 +161,12 @@ namespace PyroSentryAI.ViewModels
 
                 return;
             }
+            if (!Uri.IsWellFormedUriString(NewCameraRtspUrl, UriKind.Absolute))
+            {
+                CameraErrorMessage = "Lütfen geçerli bir RTSP adresi girin (örn: rtsp://...).";
+                HasCameraError = true;
+                return; 
+            }
             try
             {
                 var newCam = new TblCamera
@@ -175,7 +180,7 @@ namespace PyroSentryAI.ViewModels
 
 
                 // Ekrandaki listeyi anında güncellenir. ObservableCollection ile
-                Cameras.Add(addedCamera);
+                Cameras.Add(_cameraFactory.Create(addedCamera, initializePlayer: false));
 
                 // Ekleme sonrası formu temizle
                 NewCameraName = "";
@@ -194,19 +199,20 @@ namespace PyroSentryAI.ViewModels
         }
 
         [RelayCommand]
-        private async Task ToggleCameraStatusAsync(TblCamera camera) // Parametre olarak tıklanan kamera gelir
+        private async Task ToggleCameraStatusAsync(CameraViewModel cameraVM ) // Parametre olarak tıklanan kamera gelir
         {
             
-            if (camera == null)
+            if (cameraVM == null)
                 {
                     return;
                 }
             try
             {
-                camera.IsActive = !camera.IsActive;
-                await _dbService.UpdateCameraAsync(camera);
+                cameraVM.IsActive = !cameraVM.IsActive;
+                cameraVM.cameraModel.IsActive = cameraVM.IsActive;
+                await _dbService.UpdateCameraAsync(cameraVM.cameraModel);
                 // Adım 3: Diğer ekranlara haber ver!
-                _messenger.Send(new CameraStatusChangedMessage(camera));
+                _messenger.Send(new CameraStatusChangedMessage(cameraVM.cameraModel));
             }
             catch (Exception ex)
             {

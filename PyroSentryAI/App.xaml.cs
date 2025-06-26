@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PyroSentryAI.Models; // DbContext'imiz bu namespace içinde
@@ -22,22 +23,27 @@ namespace PyroSentryAI
         public static IHost? AppHost { get; private set; }
         public App()
         {
-            // Diğer her şeyden önce VLC motorunu başlatır.
             Core.Initialize();
-
+          
+           
             //Genel Müdürün hazır olan el kitabına ConfigureServices((context, services) services parametresi ile personelleri ve görevlerini yazar.
             //DI Container'ını oluşturur ve yapılandırır.
-            AppHost = Host.CreateDefaultBuilder().ConfigureServices((context, services) => { 
-            
-                string connectionString = "Server=MELIH;Database=PyroSentryAI_DB;Trusted_Connection=True;TrustServerCertificate=True";
-                services.AddDbContext<PyroSentryAiDbContext>(options =>
+            AppHost = Host.CreateDefaultBuilder().ConfigureServices((context, services) => {
+
+                string connectionString = context.Configuration.GetConnectionString("DefaultConnection");
+                services.AddDbContextFactory<PyroSentryAiDbContext>(options =>
                 {
                     options.UseSqlServer(connectionString);
                 });
 
+                var vlcOptions = new string[] { "--no-osd", "--no-snapshot-preview" };
+                services.AddSingleton(new LibVLC(vlcOptions));
+
                 //Singleton tek bir örneği kullanmasını sağlar. Yani uygulama boyunca tek bir AuthenticationService örneği olacak.
                 services.AddSingleton<IAuthenticationService, AuthenticationService>();
+                services.AddSingleton<IAIAnalysisService, AIAnalysisService>();
                 services.AddScoped<IDatabaseService, DatabaseService>();
+                services.AddSingleton<ICameraViewModelFactory, CameraViewModelFactory>();
                 //Singleton bir servis kendisinden daha kısa ömürlü olan servislere bagımlı olamaz o yuzden scoped kullandık. burada 
                 //ViewModel'leri ve view'leri tanıt
                 services.AddTransient<LoginViewModel>();
@@ -45,14 +51,13 @@ namespace PyroSentryAI
                 services.AddTransient<HomeViewModel>();
                 services.AddTransient<LogsViewModel>();
                 services.AddTransient<SettingsViewModel>();
-                services.AddTransient<CameraViewModel>();
+                
 
                 services.AddTransient<LoginView>();
                 services.AddTransient<MainView>();
                 //DataTemplate yapısı ile yukardaki 3 ViewModel'in hangi View ile eşleşeceğini belirlenir.Bu iş xaml dünyasında olur.
                 //Viewdan ViewModele olsaydı burada c# ile temsil ederdik.
                 services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default); //WeakReferenceMessenger, ViewModel'ler arasında mesajlaşmayı sağlar.
-
                 services.AddSingleton<IServiceProvider>(sp => sp); //Burası artık bağımsızlıgında bağımsızlıgı kımse AppHost.Services'e bağımlı degıl artık.
             })
                 .Build();

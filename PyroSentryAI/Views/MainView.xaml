@@ -10,97 +10,161 @@
         Title="PyroSentryAI" Height="720" Width="1280"
         WindowState="Maximized" WindowStyle="None" 
         AllowsTransparency="True" Background="Transparent">
-    <!--Yeni Cerceve Borderı-->
+  
     <Border Background="{StaticResource PrimaryBackgroundBrush}" CornerRadius="10">
         <Grid x:Name="titleBar" Grid.Column="1" MouseLeftButtonDown="titleBar_MouseLeftButtonDown">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Border x:Name="solBorderMenu"
+            <Border x:Name="solBorderMenu"
                 Grid.Column="0"
                 Background="{StaticResource SecondaryBackgroundBrush}" 
                 Padding="0,20,0,20">
                 <!--Menu buttonların ve iconların style'ları bu kısımda tanımlandı.-->
-            <Border.Resources>
-                <Style TargetType="Button" x:Key="MenuButtonStyle">
-                    <Setter Property="Height" Value="50"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="BorderThickness" Value="0"/>
+                <Border.Resources>
+                    <Style TargetType="Button" x:Key="MenuButtonStyle">
+                        <Setter Property="Height" Value="50"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
                         <Setter Property="Foreground" Value="#A9A9B2"/>
-                    <Setter Property="FontSize" Value="18"/>
-                    <Setter Property="Margin" Value="5,5,5,5"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                    <Setter Property="Cursor" Value="Hand"/>
-                </Style>
+                        <Setter Property="FontSize" Value="18"/>
+                        <Setter Property="Margin" Value="5,5,5,5"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                    </Style>
 
-                <Style TargetType="Path" x:Key="MenuIconStyle">
-                    <Setter Property="Width" Value="25"/>
-                    <Setter Property="Height" Value="25"/>
+                    <Style TargetType="Path" x:Key="MenuIconStyle">
+                        <Setter Property="Width" Value="25"/>
+                        <Setter Property="Height" Value="25"/>
                         <Setter Property="Fill" Value="#A9A9B2"/>
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Margin" Value="15,0,15,0"/>
-                </Style>
-            </Border.Resources>
-            <!--BorderStyle Kısmı ToggleButtonu açılır kapanır yapan kısım-->
-            <Border.Style>
-                <Style TargetType="Border">
-                    <Setter Property="Width" Value="175"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="15,0,15,0"/>
+                    </Style>
+                </Border.Resources>
+                
+                <!--BorderStyle Kısmı ToggleButtonu açılır kapanır yapan kısım-->
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Width" Value="175"/>
 
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=menuToggleButton, Path=IsChecked}" Value="False">
-                            <Setter Property="Width" Value="60"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=menuToggleButton, Path=IsChecked}" Value="False">
+                                <Setter Property="Width" Value="60"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
 
-            <Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <!--Sol Menu Kısmı-->
+                    <StackPanel Grid.Row="1" VerticalAlignment="Top" Margin="0,120,0,0">
+                        <Button Command="{Binding NavigateToHomeCommand}" Style="{StaticResource MenuButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource home}" Style="{StaticResource MenuIconStyle}"/>
+                                <TextBlock Text="Ana Sayfa" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding NavigateToLogsCommand}" Style="{StaticResource MenuButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource logs}" Style="{StaticResource MenuIconStyle}"/>
+                                <TextBlock Text="Kayıtlar" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <Button Grid.Row="2" Command="{Binding NavigateToSettingsCommand}" Style="{StaticResource MenuButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource settings}" Style="{StaticResource MenuIconStyle}"/>
+                            <TextBlock Text="Ayarlar" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+            <!--Sag Menu Kısmı-->
+            <Grid Grid.Column="1" Background="{StaticResource PrimaryBackgroundBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                    <!--Sol Menu Kısmı-->
-                <StackPanel Grid.Row="1" VerticalAlignment="Top" Margin="0,120,0,0">
-                    <Button Command="{Binding NavigateToHomeCommand}" Style="{StaticResource MenuButtonStyle}">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="{StaticResource home}" Style="{StaticResource MenuIconStyle}"/>
-                            <TextBlock Text="Ana Sayfa" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Command="{Binding NavigateToLogsCommand}" Style="{StaticResource MenuButtonStyle}">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="{StaticResource logs}" Style="{StaticResource MenuIconStyle}"/>
-                            <TextBlock Text="Kayıtlar" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                <Grid.Resources>
+                    <Style x:Key="AlarmBannerHeaderStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Foreground" Value="#EAEAEA"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="15,0,0,0"/>
+                    </Style>
 
-                <Button Grid.Row="2" Command="{Binding NavigateToSettingsCommand}" Style="{StaticResource MenuButtonStyle}">
-                    <StackPanel Orientation="Horizontal">
-                        <Path Data="{StaticResource settings}" Style="{StaticResource MenuIconStyle}"/>
-                        <TextBlock Text="Ayarlar" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-            </Grid>
-        </Border>
-        <!--Sag Menu Kısmı-->
-        <Grid Grid.Column="1" Background="{StaticResource PrimaryBackgroundBrush}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <!--ToggleButton Kısmı-->
-            <ToggleButton x:Name="menuToggleButton" Grid.Row="0"
+                    <Style x:Key="AlarmBannerTagStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="FontWeight" Value="Normal"/>
+                        <Setter Property="Foreground" Value="#EAEAEA"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="8,0,0,0"/>
+                    </Style>
+                </Grid.Resources>
+
+                <Border Grid.Row="0"
+            IsHitTestVisible="False" 
+            Visibility="{Binding IsAlarmBannerVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                            <GradientStop Color="Transparent" Offset="0" />
+                            <GradientStop Color="#CCD50000" Offset="0.2" />
+                            <GradientStop Color="#CCD50000" Offset="0.8" />
+                            <GradientStop Color="Transparent" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Border.Effect>
+                        <BlurEffect Radius="10"/>
+                    </Border.Effect>
+                </Border>
+
+                <!--ToggleButton Kısmı-->
+                <ToggleButton x:Name="menuToggleButton" Grid.Row="0"
                           IsChecked="{Binding IsMenuOpen}"
                           HorizontalAlignment="Left" VerticalAlignment="Top"
                           Width="40" Height="40" Margin="20,25,0,0"
                           Background="Transparent" BorderThickness="0" Foreground="#A9A9B2">
-                         <Path Width="20" Height="20" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                    <Path Width="20" Height="20" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
                       Data="{StaticResource menuToggle}"/>
-            </ToggleButton>
+                </ToggleButton>
+                <!--Alarm Text Kısmı-->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" 
+                    HorizontalAlignment="Left" Margin="100,5,0,0"
+                    Visibility="{Binding IsAlarmBannerVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Image Source="/Assets/Images/danger.png" Width="20" Height="20" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding AlarmBadgeText}" Style="{StaticResource AlarmBannerHeaderStyle}"/>
+                </StackPanel>
+                <!--Alarm Detayları Kısmı-->
+                <ItemsControl Grid.Row="0" ItemsSource="{Binding AlarmPanelDetails}" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,90,0"
+                    Visibility="{Binding IsAlarmBannerVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#22FFFFFF" CornerRadius="4" Margin="5">
+                                <StackPanel Orientation="Horizontal" Margin="8,5,8,5">
+                                    <Image Width="16" Height="16" VerticalAlignment="Center"
+                                     Source="{Binding Converter={StaticResource AlarmToIconConverter}}"/>
+                                    <TextBlock Text="{Binding}" Style="{StaticResource AlarmBannerTagStyle}"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
                 <!--Başlık Simge Kısmı-->
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button x:Name="btnMinimize" Style="{StaticResource WindowButtonStyle}" Click="btnMinimize_Click">
@@ -110,19 +174,19 @@
                     </Button>
                     <Button x:Name="btnMaximize" Style="{StaticResource WindowButtonStyle}" Click="btnMaximize_Click">
                         <Viewbox Width="14" Height="14">
-                        <Path Data="{StaticResource windowMaximize}" Fill="{StaticResource SecondaryTextBrush}" />
+                            <Path Data="{StaticResource windowMaximize}" Fill="{StaticResource SecondaryTextBrush}" />
                         </Viewbox>
                     </Button>
-                    
+
                     <Button x:Name="btnClose" Style="{StaticResource WindowButtonStyle}" Click="btnClose_Click">
                         <Viewbox Width="16" Height="16" Margin="0,0,8,3">
-                        <Path Data="{StaticResource windowClose}" Fill="{StaticResource SecondaryTextBrush}" />
+                            <Path Data="{StaticResource windowClose}" Fill="{StaticResource SecondaryTextBrush}" />
                         </Viewbox>
                     </Button>
                 </StackPanel>
                 <!--ContentControl Kısmı Yani icerik Burada Goruntulenecek-->
                 <ContentControl Grid.Row="1" Content="{Binding CurrentView}" />
             </Grid>
-    </Grid>
+        </Grid>
     </Border>
 </Window>

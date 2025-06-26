@@ -11,6 +11,7 @@
             </ResourceDictionary.MergedDictionaries>
             <!--Newleme İslemi-->
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:AlarmToIconConverter x:Key="AlarmToIconConverter"/>
 
             <!--Renk Paleti-->
             <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#1E1E24"/>

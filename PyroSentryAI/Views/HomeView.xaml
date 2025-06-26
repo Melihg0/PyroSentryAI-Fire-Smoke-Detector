@@ -7,29 +7,98 @@
               xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-             
+
     <Grid>
+        <Border IsHitTestVisible="False">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="#B71C1C"/>
+                    <Setter Property="Opacity" Value="0"/>
+                    <Setter Property="Visibility" Value="Collapsed"/>
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsGlobalAlarmActive}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             From="0.1" To="0.25" Duration="0:0:2" AutoReverse="True" RepeatBehavior="Forever"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+        <ItemsControl Margin="10" ItemsSource="{Binding Cameras}">
+        </ItemsControl>
         <!--Kamera Görüntüleme Kısmı-->
         <ItemsControl Margin="10" ItemsSource="{Binding Cameras}">
+
+            <ItemsControl.Resources>
+                <Style x:Key="CameraTitleStyle" TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="#FFEAEAEB" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="0,5,0,5" />
+                </Style>
+            </ItemsControl.Resources>
+
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="3"  />
+                    <UniformGrid Columns="3" Rows="2"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="#FF8C00" BorderThickness="1.5" Margin="5" Background="Black" CornerRadius="4">
+                    <Border BorderThickness="1.5" Margin="5" Background="Black" CornerRadius="4">
+
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="BorderBrush" Value="#FF8C00" />
+                                <Setter Property="BorderThickness" Value="1.5" />
+                                <Setter Property="Effect" Value="{x:Null}" />
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsInAlarmState}" Value="True">
+                                        <Setter Property="BorderBrush" Value="#DD0A0A" />
+                                        <Setter Property="BorderThickness" Value="3" />
+                                        <Setter Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect ShadowDepth="0" Color="#DD0A0A" BlurRadius="15"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="{Binding CameraName}"
-                               Foreground="#FFEAEAEB" FontWeight="Bold"
-                               HorizontalAlignment="Center" Margin="5"/>
-                            <vlc:VideoView Grid.Row="1" MediaPlayer="{Binding MediaPlayer}" />
 
+                            <TextBlock Grid.Row="0" 
+                           Text="{Binding CameraName}"
+                           Style="{StaticResource CameraTitleStyle}" />
+
+                            <Viewbox Grid.Row="1" Stretch="Uniform">
+                                <vlc:VideoView MediaPlayer="{Binding MediaPlayer}" Width="640" Height="480" />
+                            </Viewbox>
                         </Grid>
+
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
