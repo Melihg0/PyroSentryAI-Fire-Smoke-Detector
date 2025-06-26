@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace PyroSentryAI.Views
 {
     /// <summary>
-    /// SettingsView.xaml etkileşim mantığı
+    /// LogsView.xaml etkileşim mantığı
     /// </summary>
-    public partial class SettingsView : UserControl
+    public partial class LogsView : UserControl
     {
-        public SettingsView()
+        public LogsView()
         {
             InitializeComponent();
         }

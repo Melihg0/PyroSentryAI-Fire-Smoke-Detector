@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PyroSentryAI"
-        xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         xmlns:vm="clr-namespace:PyroSentryAI.ViewModels"
         mc:Ignorable="d"
         
@@ -29,7 +28,7 @@
                     <Setter Property="Height" Value="50"/>
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Foreground" Value="#FFEAEAEB"/>
+                        <Setter Property="Foreground" Value="#A9A9B2"/>
                     <Setter Property="FontSize" Value="18"/>
                     <Setter Property="Margin" Value="5,5,5,5"/>
                     <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -39,9 +38,9 @@
                 <Style TargetType="Path" x:Key="MenuIconStyle">
                     <Setter Property="Width" Value="25"/>
                     <Setter Property="Height" Value="25"/>
-                    <Setter Property="Fill" Value="#FFA9A9B2"/>
+                        <Setter Property="Fill" Value="#A9A9B2"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Margin" Value="10,0,15,0"/>
+                    <Setter Property="Margin" Value="15,0,15,0"/>
                 </Style>
             </Border.Resources>
             <!--BorderStyle Kısmı ToggleButtonu açılır kapanır yapan kısım-->
@@ -98,7 +97,7 @@
                           IsChecked="{Binding IsMenuOpen}"
                           HorizontalAlignment="Left" VerticalAlignment="Top"
                           Width="40" Height="40" Margin="20,25,0,0"
-                          Background="Transparent" BorderThickness="0" Foreground="White">
+                          Background="Transparent" BorderThickness="0" Foreground="#A9A9B2">
                          <Path Width="20" Height="20" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
                       Data="{StaticResource menuToggle}"/>
             </ToggleButton>
@@ -121,32 +120,9 @@
                         </Viewbox>
                     </Button>
                 </StackPanel>
-                <!--Kamera Görüntüleme Kısmı-->
-            <ItemsControl Grid.Row="1" Margin="10" ItemsSource="{Binding Cameras}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="3"  />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderBrush="#FF8C00" BorderThickness="1.5" Margin="5" Background="Black" CornerRadius="4">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="{Binding CameraName}"
-                                           Foreground="#FFEAEAEB" FontWeight="Bold"
-                                           HorizontalAlignment="Center" Margin="5"/>
-                                <vlc:VideoView Grid.Row="1" MediaPlayer="{Binding MediaPlayer}" />
-                                
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Grid>
+                <!--ContentControl Kısmı Yani icerik Burada Goruntulenecek-->
+                <ContentControl Grid.Row="1" Content="{Binding CurrentView}" />
+            </Grid>
     </Grid>
     </Border>
 </Window>

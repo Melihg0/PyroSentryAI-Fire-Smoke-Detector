@@ -36,6 +36,26 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            
+
+                    <DataTemplate xmlns:vm="clr-namespace:PyroSentryAI.ViewModels"
+                      xmlns:views="clr-namespace:PyroSentryAI.Views"
+                      DataType="{x:Type vm:HomeViewModel}">
+                        <views:HomeView/>
+                    </DataTemplate>
+
+                    <DataTemplate xmlns:vm="clr-namespace:PyroSentryAI.ViewModels"
+                      xmlns:views="clr-namespace:PyroSentryAI.Views"
+                      DataType="{x:Type vm:LogsViewModel}">
+                        <views:LogsView/>
+                    </DataTemplate>
+
+                    <DataTemplate xmlns:vm="clr-namespace:PyroSentryAI.ViewModels"
+                      xmlns:views="clr-namespace:PyroSentryAI.Views"
+                      DataType="{x:Type vm:SettingsViewModel}">
+                        <views:SettingsView/>
+                    </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
     

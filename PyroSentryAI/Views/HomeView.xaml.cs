@@ -15,12 +15,10 @@ using System.Windows.Shapes;
 
 namespace PyroSentryAI.Views
 {
-    /// <summary>
-    /// SettingsView.xaml etkileşim mantığı
-    /// </summary>
-    public partial class SettingsView : UserControl
+
+    public partial class HomeView : UserControl
     {
-        public SettingsView()
+        public HomeView()
         {
             InitializeComponent();
         }
