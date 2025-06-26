@@ -33,9 +33,4 @@
   <ItemGroup>
     <Resource Include="Assets\Images\fireandsmoke.jpg" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Assets\Images\fireandsmoke.jpg" />
-  </ItemGroup>
-
 </Project>
