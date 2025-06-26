@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PyroSentryAI.ViewModels; 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +12,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using PyroSentryAI.ViewModels; 
 
 namespace PyroSentryAI.Views
 {
@@ -20,9 +21,8 @@ namespace PyroSentryAI.Views
         public MainView()
         {
             InitializeComponent();
-
-            // Bu satır, "Bu pencerenin beyni, MainViewModel sınıfının yeni bir örneğidir" der.
-            this.DataContext = new MainViewModel();
+            var viewModel = App.AppHost.Services.GetRequiredService<MainViewModel>();
+            this.DataContext = viewModel;
         }
 
         private void titleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
