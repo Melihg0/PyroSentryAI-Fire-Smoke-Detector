@@ -6,7 +6,257 @@
              xmlns:local="clr-namespace:PyroSentryAI.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <!-- ADETA COMBOBOXU YENİDEN URETTIK  ILK 108 SATIRI ATLA Combobox stili tanımlı -->
+    <UserControl.Resources>
+        <Style x:Key="ThemedComboBoxStyle" TargetType="{x:Type ComboBox}">
+            <!-- ComboBox kapalıyken nasıl görüneceğini belirleyen genel ayarlar -->
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{StaticResource SecondaryTextBrush}"/>
+            <Setter Property="BorderThickness" Value="0.2,0.5,0.2,2"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <!-- ComboBox'ın tüm görsel yapısını burada baştan çiziyoruz -->
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <!-- 1. ANA YAPI: Kutu ve Açılır Pencere -->
+
+                            <!-- ComboBox'ın kapalıyken gördüğümüz ana kutusu. Tıklanabilir bir butondur. -->
+                            <ToggleButton x:Name="toggleButton" 
+                                      Background="{TemplateBinding Background}" 
+                                      BorderBrush="{TemplateBinding BorderBrush}" 
+                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="{TemplateBinding Background}" CornerRadius="2"
+                                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Seçili yazının rengini buradan almasını sağlıyoruz -->
+                                                <TextBlock Grid.Column="0" 
+                                                       Text="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ComboBox}}" 
+                                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                                                       VerticalAlignment="Center" 
+                                                       Margin="{TemplateBinding Padding}"/>
+
+                                                <!-- Sağdaki aşağı ok ikonu -->
+                                                <Path Grid.Column="1" Data="M 0 0 L 4 4 L 8 0 Z" Fill="{StaticResource SecondaryTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+
+                            <!-- Tıkladığımızda açılan pencere. -->
+                            <Popup x:Name="PART_Popup" AllowsTransparency="true" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom">
+                                <Border Background="{StaticResource SecondaryBackgroundBrush}" 
+                                    BorderBrush="{StaticResource AccentBrush1}" 
+                                    BorderThickness="1" 
+                                    CornerRadius="4"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                    MinWidth="{Binding ActualWidth, ElementName=toggleButton}">
+                                    <ScrollViewer>
+                                        <!-- FPS seçeneklerimizi (1, 2, 4...) gösteren asıl liste alanı -->
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 2. AÇILIR LİSTE SATIRLARI İÇİN STİL -->
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+            <Setter Property="Padding" Value="10,8"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border Padding="{TemplateBinding Padding}" 
+                            Background="{TemplateBinding Background}" 
+                            BorderThickness="0">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="#4A4A52"/>
+                </Trigger>
+
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource AccentBrush1}"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+
+    <!--Buradan baslıyor-->
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sol tarafta ayarlar ve yeni kamera ekleme alanı -->
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="40">
+                <!-- BÖLÜM 1: GENEL ANALİZ AYARLARI -->
+                <TextBlock Text="Uygulama Ayarları" 
+                    Foreground="{StaticResource PrimaryTextBrush}" 
+                    FontSize="24" FontWeight="Bold" 
+                    Margin="0,0,0,25" />
+
+                <!-- GÜVEN EŞİĞİ -->
+                <TextBlock Text="Güven Eşiği (Confidence Threshold)" 
+                    Foreground="{StaticResource SecondaryTextBrush}" FontSize="16" Margin="0,0,0,5"/>
+                <TextBox Style="{StaticResource BaseTextBoxStyle}"
+                    CaretBrush="{StaticResource AccentBrush1}"
+                    Tag="{StaticResource AccentBrush1}"
+                    Text="{Binding ConfidenceThreshold}"
+                    ToolTip="Nesne tespitleri için minimum güven skoru (Örn: 0.65)"
+                    Width="450" HorizontalAlignment="Left"/>
+
+                <!-- ANALİZ FPS -->
+                <TextBlock Text="Analiz FPS (Saniyedeki Kare Sayısı)" 
+                    Foreground="{StaticResource SecondaryTextBrush}" FontSize="16" Margin="0,20,0,5"/>
+                <ComboBox Style="{StaticResource ThemedComboBoxStyle}"
+                    ItemsSource="{Binding FpsOptions}"  
+                    SelectedItem="{Binding AnalysisFps}"
+                    ToolTip="Yapay zeka analizinin saniyede kaç kez çalışacağı"
+                    Width="450" HorizontalAlignment="Left"/>
+
+                <!-- AYARLARI KAYDET BUTONU -->
+                <Button Style="{StaticResource BaseButtonStyle}"
+                    Command="{Binding SaveSettingsCommand}"
+                    Content="Ayarları Kaydet"
+                    Background="{StaticResource AccentBrush1}"
+                    Foreground="{StaticResource PrimaryTextBrush}"
+                    Width="200" HorizontalAlignment="Left" Margin="0,30,0,0"/>
+
+
+                <!-- BÖLÜM 2: YENİ KAMERA EKLEME -->
+                <TextBlock Text="Yeni Kamera Ekle" 
+                    Foreground="{StaticResource PrimaryTextBrush}" 
+                    FontSize="24" FontWeight="Bold" 
+                    Margin="0,60,0,25" />
+
+                <!-- KAMERA ADI -->
+                <TextBlock Text="Kamera Adı" 
+                    Foreground="{StaticResource SecondaryTextBrush}" FontSize="16" Margin="0,0,0,5"/>
+                <TextBox Style="{StaticResource BaseTextBoxStyle}"
+                    Tag="{StaticResource AccentBrush}"
+                    Text="{Binding NewCameraName}"
+                    Width="450" HorizontalAlignment="Left"/>
+
+                <!-- RTSP ADRESİ -->
+                <TextBlock Text="RTSP Adresi" 
+                    Foreground="{StaticResource SecondaryTextBrush}" FontSize="16" Margin="0,20,0,5"/>
+                <TextBox Style="{StaticResource BaseTextBoxStyle}"
+                    Tag="{StaticResource AccentBrush}"
+                    Text="{Binding NewCameraRtspUrl}"
+                    Width="450" HorizontalAlignment="Left"/>
+
+                <!-- KAMERA EKLE BUTONU -->
+                <Button Style="{StaticResource BaseButtonStyle}"
+                    Command="{Binding AddCameraCommand}"
+                    Content="Kamerayı Ekle"
+                    Background="{StaticResource AccentBrush}"
+                    Foreground="{StaticResource PrimaryTextBrush}"
+                    Width="200" HorizontalAlignment="Left" Margin="0,30,0,0" />
+            </StackPanel>
+        </ScrollViewer>
+        <Grid Grid.Column="1" Margin="20,40,40,40">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Mevcut Kameralar" FontSize="24" FontWeight="Bold" 
+                           Foreground="{StaticResource PrimaryTextBrush}" Margin="0,0,0,25"/>
+
+                <DataGrid ItemsSource="{Binding Cameras}"
+                          AutoGenerateColumns="False"
+                          Background="Transparent"
+                          BorderThickness="0"
+                          CanUserAddRows="False"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="None"
+                          RowBackground="Transparent"
+                          Foreground="{StaticResource PrimaryTextBrush}">
+
+                    <DataGrid.Resources>
+                        <!-- Başlıkların stili -->
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource SecondaryTextBrush}"/>
+                            <Setter Property="Padding" Value="5"/>
+                        </Style>
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+                        <!-- Kamera Adı Sütunu -->
+                        <DataGridTextColumn Header="Kamera Adı" Binding="{Binding CameraName}" Width="*" FontSize="16"/>
+
+                        <!-- Durum Sütunu (Aktif/Pasif) -->
+                        <DataGridTemplateColumn Header="Durum" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
+                                        <!-- Yeşil -->
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="Aktif"/>
+                                                <Setter Property="Foreground" Value="#2ECC71"/>
+                                                <!-- Kırmızı -->
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                        <Setter Property="Text" Value="Pasif"/>
+                                                        <Setter Property="Foreground" Value="#E74C3C"/>
+
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- İşlemler Sütunu (Butonlar) -->
+                        <DataGridTemplateColumn Header="İşlemler" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- Silme buttonu -->
+                                        <Button Content="Sil" Margin="5" Width="50"
+                                                Command="{Binding DataContext.DeleteCameraCommand, 
+                                                RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"/>
+                                        <!--Ata sınıfın datacontext'ini kullanarak DeleteCameraCommand'a bindingle bağlıyoruz.-->
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Grid>
     </Grid>
 </UserControl>
