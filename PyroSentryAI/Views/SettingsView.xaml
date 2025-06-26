@@ -142,6 +142,16 @@
                     SelectedItem="{Binding AnalysisFps}"
                     ToolTip="Yapay zeka analizinin saniyede kaç kez çalışacağı"
                     Width="450" HorizontalAlignment="Left"/>
+                
+                <!-- Ayarlar Butonu Durum ve Hata mesajları değişecek burası  -->
+              
+                    <TextBlock Text="{Binding SettingsErrorMessage}" 
+                        Foreground="#E74C3C"
+                        FontWeight="SemiBold" 
+                        TextWrapping="Wrap"
+                        Visibility="{Binding HasSettingsError, 
+                        Converter={StaticResource BooleanToVisibilityConverter}}"/>
+              
 
                 <!-- AYARLARI KAYDET BUTONU -->
                 <Button Style="{StaticResource BaseButtonStyle}"
@@ -168,15 +178,23 @@
 
                 <!-- RTSP ADRESİ -->
                 <TextBlock Text="RTSP Adresi" 
-                    Foreground="{StaticResource SecondaryTextBrush}" FontSize="16" Margin="0,20,0,5"/>
+                    Foreground="{StaticResource SecondaryTextBrush}" FontSize="16" Margin="0,20,0,0"/>
                 <TextBox Style="{StaticResource BaseTextBoxStyle}"
                     Tag="{StaticResource AccentBrush}"
                     Text="{Binding NewCameraRtspUrl}"
                     Width="450" HorizontalAlignment="Left"/>
 
+                <!-- Kamera Butonu Durum ve Hata mesajları değişecek durum mesajları ıcın servısler gelıcek -->
+                    <TextBlock Text="{Binding CameraErrorMessage}"
+                        Foreground="#E74C3C"
+                        FontWeight="SemiBold"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding HasCameraError, 
+                        Converter={StaticResource BooleanToVisibilityConverter}}"/>
+          
                 <!-- KAMERA EKLE BUTONU -->
                 <Button Style="{StaticResource BaseButtonStyle}"
-                    Command="{Binding AddCameraCommand}"
+                    Command="{Binding AddCameraAsyncCommand}"
                     Content="Kamerayı Ekle"
                     Background="{StaticResource AccentBrush}"
                     Foreground="{StaticResource PrimaryTextBrush}"
@@ -255,7 +273,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Style="{StaticResource ActionButtonStyle}"
-                                    Command="{Binding DataContext.ToggleCameraStatusCommand, 
+                                    Command="{Binding DataContext.ToggleCameraStatusAsyncCommand, 
                                         RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                     CommandParameter="{Binding}" />
                                 </DataTemplate>

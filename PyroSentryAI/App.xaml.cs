@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using LibVLCSharp.Shared;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PyroSentryAI.Models; // DbContext'imiz bu namespace içinde
-using PyroSentryAI.Services.Interfaces;
 using PyroSentryAI.Services.Implementations;
+using PyroSentryAI.Services.Interfaces;
 using PyroSentryAI.ViewModels; 
 using PyroSentryAI.Views; 
 using System.Configuration;
 using System.Data;
 using System.Windows;
-using LibVLCSharp.Shared;
-using Microsoft.EntityFrameworkCore;
 
 namespace PyroSentryAI
 {
@@ -35,8 +36,9 @@ namespace PyroSentryAI
                 });
 
                 //Singleton tek bir örneği kullanmasını sağlar. Yani uygulama boyunca tek bir AuthenticationService örneği olacak.
-                services.AddSingleton<IAuthenticationService, AuthenticationService>(); 
-
+                services.AddSingleton<IAuthenticationService, AuthenticationService>();
+                services.AddScoped<IDatabaseService, DatabaseService>();
+                //Singleton bir servis kendisinden daha kısa ömürlü olan servislere bagımlı olamaz o yuzden scoped kullandık. burada 
                 //ViewModel'leri ve view'leri tanıt
                 services.AddTransient<LoginViewModel>();
                 services.AddTransient<MainViewModel>();
@@ -49,6 +51,7 @@ namespace PyroSentryAI
                 services.AddTransient<MainView>();
                 //DataTemplate yapısı ile yukardaki 3 ViewModel'in hangi View ile eşleşeceğini belirlenir.Bu iş xaml dünyasında olur.
                 //Viewdan ViewModele olsaydı burada c# ile temsil ederdik.
+                services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default); //WeakReferenceMessenger, ViewModel'ler arasında mesajlaşmayı sağlar.
 
                 services.AddSingleton<IServiceProvider>(sp => sp); //Burası artık bağımsızlıgında bağımsızlıgı kımse AppHost.Services'e bağımlı degıl artık.
             })

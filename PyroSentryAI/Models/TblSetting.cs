@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PyroSentryAI.Models;
 
-[Keyless]
+
 [Table("tbl_Settings")]
 public partial class TblSetting
 {
+    [Key] 
+    public int SettingID { get; set; }
     [Column(TypeName = "decimal(3, 2)")]
     public decimal ConfidenceThreshold { get; set; }
 

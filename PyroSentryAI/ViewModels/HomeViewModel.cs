@@ -1,14 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using PyroSentryAI.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static PyroSentryAI.ViewModels.SettingsViewModel;
 
 namespace PyroSentryAI.ViewModels
 {
-    class HomeViewModel : ObservableObject
+    class HomeViewModel : ObservableObject, IRecipient<CameraAddedMessage>, IRecipient<CameraStatusChangedMessage>
     {
         public ObservableCollection<CameraViewModel> Cameras { get; } = new();
         public HomeViewModel()
@@ -16,6 +19,8 @@ namespace PyroSentryAI.ViewModels
             // Test kameraları yükle
             LoadTestCameras();
         }
+        private readonly IDatabaseService _dbService;
+        private readonly IMessenger _messenger;
         private void LoadTestCameras()
         {
 
@@ -28,6 +33,16 @@ namespace PyroSentryAI.ViewModels
 
 
 
+        }
+
+        public void Receive(CameraStatusChangedMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Receive(CameraAddedMessage message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

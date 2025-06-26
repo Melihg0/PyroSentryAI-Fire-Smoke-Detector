@@ -7,7 +7,7 @@ using PyroSentryAI.Models;
 
 namespace PyroSentryAI.Services.Interfaces
 {
-    interface IDatabaseService
+    public interface IDatabaseService
     {
         //Ayarlar için Metotlar.
         Task<TblSetting> GetSettingsAsync();

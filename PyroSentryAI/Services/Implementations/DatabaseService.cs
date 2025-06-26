@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 namespace PyroSentryAI.Services.Implementations
 {
-    class DatabaseService : IDatabaseService
+    public class DatabaseService : IDatabaseService
     {
         private readonly PyroSentryAiDbContext _context;
 
@@ -26,13 +26,9 @@ namespace PyroSentryAI.Services.Implementations
 
         public async Task UpdateSettingsAsync(TblSetting settings)
         {
-            var existingSettings = await _context.TblSettings.FirstOrDefaultAsync();
-            if (existingSettings != null)
-            {
-                existingSettings.ConfidenceThreshold = settings.ConfidenceThreshold;
-                existingSettings.AnalysisFps = settings.AnalysisFps;
-                await _context.SaveChangesAsync();
-            }
+            _context.Entry(settings).State = EntityState.Modified; //zorla guncelle
+            await _context.SaveChangesAsync();           
+        }
         }
 
 
