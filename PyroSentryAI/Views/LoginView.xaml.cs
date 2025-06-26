@@ -14,9 +14,7 @@ using System.Windows.Shapes;
 
 namespace PyroSentryAI.Views
 {
-    /// <summary>
-    /// LoginView.xaml etkileşim mantığı
-    /// </summary>
+
     public partial class LoginView : Window
     {
         public LoginView()

@@ -4,6 +4,18 @@
              xmlns:local="clr-namespace:PyroSentryAI"
              StartupUri="Views/MainView.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Assets/Icons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#1E1E24"/>
+                    <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="#2D2D35"/>
+                    <SolidColorBrush x:Key="PrimaryTextBrush" Color="#EAEAEB"/>
+                    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#A9A9B2"/>
+                    <SolidColorBrush x:Key="AccentBrush" Color="#FF8C00"/>
+              
+        </ResourceDictionary>
+        
     </Application.Resources>
 </Application>
+    

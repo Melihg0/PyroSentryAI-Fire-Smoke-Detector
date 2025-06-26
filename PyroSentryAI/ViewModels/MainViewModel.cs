@@ -14,12 +14,13 @@ namespace PyroSentryAI.ViewModels
 
         private void LoadTestCameras()
         {
-            // Artık ne RTSP var ne de donanım adı. Sadece basit test verileri.
+
             Cameras.Add(new CameraViewModel("Kamera 1", "CornflowerBlue"));
             Cameras.Add(new CameraViewModel("Kamera 2", "DarkGoldenrod"));
             Cameras.Add(new CameraViewModel("Kamera 3", "IndianRed"));
             Cameras.Add(new CameraViewModel("Kamera 4", "LightGreen"));
-
+            Cameras.Add(new CameraViewModel("Kamera 4", "LightGreen"));
+            Cameras.Add(new CameraViewModel("Kamera 4", "LightGreen"));
 
         }
     }
